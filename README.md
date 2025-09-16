@@ -1,8 +1,14 @@
 # The GOAL
 
+---
+
+## Assignment 2
+> Implementation of Model-View-Template (MVT) in Django
+
+#### Link to the deployed PWS application
 [https://arisa-raezzura-thegoal.pbp.cs.ui.ac.id/](https://arisa-raezzura-thegoal.pbp.cs.ui.ac.id/)
 
-## How to Create the Project
+#### Explain how you implemented the checklist above step-by-step
 
 1. Open the command prompt and run `mkdir the_goal` to create a new directory. Then, run `cd the_goal` to enter it.
 
@@ -386,24 +392,304 @@
 
 37. Create a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: create README.md"`
 
-## Client Request-Response
+#### Create a diagram showing the client request to the Django-based web application and its response, and explain the relationship between `urls.py`, `views.py`, `models.py`, and the HTML file in the diagram.
 
-Create a diagram showing the client request to the Django-based web application and its response, and explain the relationship between urls.py, views.py, models.py, and the HTML file in the diagram.
+![Client Request-Response Diagram](assets/ClientRequestResponseDiagram.png)
 
-![Client Request-Response Diagram](ClientRequestResponseDiagram.png)
-
-## Role of `settings.py`
+#### Explain the role of `settings.py` in a Django project!
 
 `setting.py` is like the project's control center. It defines how the project behaves, holding all the key configurations necessary to manage the app’s behavior across development, testing, and production environments.
 
-## How does Database Migration work?
+#### How does database migration work in Django?
 
 Database migration refers to the process of transferring data from a source database to a target database. When this process is complete, the dataset from the source database will be entirely transferred to the target database.
 
-## Why Django?
+#### In your opinion, among all existing frameworks, why is the Django framework chosen as the starting point for learning software development?
 
 Since the main language used in Django is Python, which we are all already familiar with, we can focus on building and developing the application rather than doing it on top of learning a completely new language. Additionally, the Django framework offers both a frontend and a backend within a single application.
 
-## Feedback for TA
+#### Do you have any feedback for the teaching assistant for Tutorial 1 that you previously completed?
 
 I currently have no feedback for the TAs since they already helped us a lot during the Tutorial. For future tutorials, I hope they continue to do what they're doing now and help us when we encounter problems.
+
+---
+
+## Assignment 3
+
+> Forms and Data Delivery Implementation in Django
+
+#### Why do we need data delivery in implementing a platform?
+
+To enhance personalization and user engagement on a platform, human interaction is essential. Such interaction frequently involves the transmission and reception of data. Data delivery ensures that the data stays consistent and synchronized across devices.
+
+#### In your opinion, which is better, XML or JSON? Why is JSON more popular than XML?
+
+In my opinion, JSON is preferable. XML is suitable for complex applications due to its robust validation features and use of attributes. However, JSON is favored for its lightweight nature and speed. Its native compatibility with JavaScript and ease of use also contribute to its greater popularity in recent applications over XML.
+
+#### What is the purpose of the is_valid() method in Django forms, and why do we need it?
+
+The is_valid() method ensures the data submitted by the user meets the validation rules and logic constraints. It returns a Boolean value, thus preventing invalid, incomplete, or unsafe data from being saved or processed.
+
+#### Why do we need a csrf_token when making forms in Django? What can happen if we don't include a csrf_token in a Django form? How can this be exploited by an attacker?
+
+Cross-Site Request Forgery (CSRF) is a type of cyberattack in which an attacker manipulates a user into performing unintended actions on a web application where they are already authenticated. The csrf_token protects against such threats by preventing malicious websites from submitting forms on behalf of authenticated users without their consent. Without this token, an application is exposed to CSRF attacks. For example, CSRF may be exploited to transfer funds without the user's knowledge, as the valid session allows the transaction to proceed as if authorized by the user.
+
+#### Explain how you implemented the checklist above step-by-step (not just following the tutorial).
+
+1. Create a new directory in the root directory named `templates` and add a `base.html` file containing this code
+
+    ```
+    {% load static %}
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {% block meta %} {% endblock meta %}
+    </head>
+
+    <body>
+        {% block content %} {% endblock content %}
+    </body>
+    </html>
+    ```
+
+2. Open `settings.py` in the project directory (the inner `the-goal` directory) and edit the line containing the `TEMPLATES` variable
+
+    ```
+    ...
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [BASE_DIR / 'templates'], # Add this line
+            'APP_DIRS': True,
+            ...
+        }
+    ]
+    ...
+    ```
+
+3. Create a new file named `forms.py` in the `main` directory and add the following code
+
+    ```
+    from django.forms import ModelForm
+    from main.models import Product
+
+    class ProductForm(ModelForm):
+        class Meta:
+            model = Product
+            fields = ["name", "price", "description", "thumbnail","category", "stock", "is_featured"]     
+    ```
+
+4. Modify the `views.py` file inside the `main` directory with the following code
+
+    ```
+    from django.shortcuts import render, redirect, get_object_or_404
+    from main.forms import ProductForm
+    from main.models import Product
+    from django.http import HttpResponse
+    from django.core import serializers
+
+    def show_main(request):
+        product_list = Product.objects.all()
+
+        context = {
+            'app' : 'The GOAL',
+            'name': 'Arisa Raezzura Zahra',
+            'class': 'PBD KKI',
+            'product_list' : product_list
+        }
+
+        return render(request, "main.html", context)
+
+    def create_product(request):
+        form = ProductForm(request.POST or None)
+
+        if form.is_valid() and request.method == "POST":
+            form.save()
+            return redirect('main:show_main')
+
+        context = {'form': form}
+        return render(request, "create_product.html", context)
+
+    def show_product(request, id):
+        product = get_object_or_404(Product, pk=id)
+
+        context = {
+            'product': product
+        }
+
+        return render(request, "product_detail.html", context)
+
+    def show_xml(request):
+        product_list = Product.objects.all()
+        xml_data = serializers.serialize("xml", product_list)
+        return HttpResponse(xml_data, content_type="application/xml")
+
+    def show_json(request):
+        product_list = Product.objects.all()
+        json_data = serializers.serialize("json", product_list)
+        return HttpResponse(json_data, content_type="application/json")
+
+    def show_xml_by_id(request, id):
+        try:
+            product_item = Product.objects.filter(pk=id)
+            xml_data = serializers.serialize("xml", product_item)
+            return HttpResponse(xml_data, content_type="application/xml")
+        except Product.DoesNotExist:
+            return HttpResponse(status=404)
+
+    def show_json_by_id(request, id):
+        try:
+            product_item = Product.objects.get(pk=id)
+            json_data = serializers.serialize("json", [product_item])
+            return HttpResponse(json_data, content_type="application/json")
+        except Product.DoesNotExist:
+            return HttpResponse(status=404)
+    ```
+
+5. Modify the `urls.py` file inside the `main` directory
+
+    ```
+    from django.urls import path
+    from main.views import show_main, create_product, show_product, show_xml, show_json, show_xml_by_id, show_json_by_id
+
+    app_name = 'main'
+
+    urlpatterns = [
+        path('', show_main, name='show_main'),
+        path('create-product/', create_product, name='create_product'),
+        path('product/<str:id>/', show_product, name='show_product'),
+        path('xml/', show_xml, name='show_xml'),
+        path('json/', show_json, name='show_json'),
+        path('xml/<str:id>/', show_xml_by_id, name='show_xml_by_id'),
+        path('json/<str:id>/', show_json_by_id, name='show_json_by_id'),
+    ]
+    ```
+
+6. Modify `main.html` inside the `main` directory
+
+    ```
+    {% extends 'base.html' %}
+    {% block content %}
+    <h1>{{ app }}</h1>
+
+    <h4>Name: </h4>
+    <p>{{ name }}</p>
+    <h4>Class: </h4>
+    <p>{{ class }}</p>
+
+    <a href="{% url 'main:create_product' %}">
+        <button>+ Add Product</button>
+    </a>
+
+    <hr>
+
+    {% if not product_list %}
+    <p>No product data available.</p>
+
+    {% else %}
+    {% for product in product_list %}
+    <div>
+        <h2><a href="{% url 'main:show_product' product.id %}">{{ product.name }}</a></h2>
+
+        <p><b>{{ product.get_category_display }}</b>{% if product.is_featured %} |
+            <b>Featured</b>{% endif %}
+            | Stock: {{ product.stock }}
+        </p>
+
+        {% if product.thumbnail %}
+        <img src="{{ product.thumbnail }}" alt="thumbnail" width="150" height="100">
+        <br />
+        {% endif %}
+
+        <p>{{ product.description|truncatewords:25 }}...</p>
+
+        <p><a href="{% url 'main:show_product' product.id %}"><button>Read More</button></a></p>
+    </div>
+
+    <hr>
+    {% endfor %}
+    {% endif %}
+    {% endblock content %}
+    ```
+
+7. In the same directory, add two new files named `create_product.html` and `product_detail.html`
+
+    **create_product.html**
+    ```
+    {% extends 'base.html' %}
+    {% block content %}
+    <h1>Add Product</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Add Product" />
+                </td>
+            </tr>
+        </table>
+    </form>
+    {% endblock %}
+    ```
+
+    **product_detail.html**
+    ```
+    {% extends 'base.html' %}
+    {% block content %}
+    <p><a href="{% url 'main:show_main' %}"><button>← Back to Product List</button></a></p>
+
+    <h1>{{ product.name }}</h1>
+    <p><b>{{ product.get_category_display }}</b>{% if product.is_featured %} |
+        <b>Featured</b>{% endif %} | Stock: {{ product.stock }}
+    </p>
+
+    {% if product.thumbnail %}
+    <img src="{{ product.thumbnail }}" alt="Product thumbnail" width="300">
+    <br /><br />
+    {% endif %}
+
+    <p>{{ product.description }}</p>
+    {% endblock content %}
+    ```
+
+8.  Open `setting.py` in the root directory (the outer `the-goal` directory) and add the following line under `ALLOWED_HOSTS`
+
+    ```
+    CSRF_TRUSTED_ORIGINS = ["https://arisa-raezzura-thegoal.pbp.cs.ui.ac.id"]
+    ```
+
+9. Save the changes and run these lines in the root directory command prompt
+
+    ```
+    git add .
+    git commit -m "feat: applied forms and data delivery"
+    git push origin master
+    git push pws master
+    ```
+
+10. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 3"`
+
+#### Do you have any feedback for the teaching assistants for Tutorial 2?
+
+Currently, no feedback for the TAs. They helped us a lot during the tutorial, and even corrected their mistakes on the website immediately after someone noticed them. 
+
+#### Access the four URLs in point 2 using Postman, take screenshots of the URL access results in Postman.
+
+**show_xml**
+![http://127.0.0.1:8000/xml access result](assets/show_xml.png)
+
+**show_xml_by_id**
+![http://127.0.0.1:8000/xml/05ad3136-c80f-4a0b-aafa-551ded7ad456 access result](assets/show_xml_by_id.png)
+
+**show_json**
+![http://127.0.0.1:8000/json access result](assets/show_json.png)
+
+**show_json_by_id**
+![http://127.0.0.1:8000/json/05ad3136-c80f-4a0b-aafa-551ded7ad456 access result](assets/show_json_by_id.png)
+
