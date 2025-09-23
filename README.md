@@ -1,14 +1,12 @@
 # The GOAL
 
----
-
 ## Assignment 2
 > Implementation of Model-View-Template (MVT) in Django
 
-#### Link to the deployed PWS application
+### Link to the deployed PWS application
 [https://arisa-raezzura-thegoal.pbp.cs.ui.ac.id/](https://arisa-raezzura-thegoal.pbp.cs.ui.ac.id/)
 
-#### Explain how you implemented the checklist above step-by-step
+### Explain how you implemented the checklist above step-by-step
 
 1. Open the command prompt and run `mkdir the_goal` to create a new directory. Then, run `cd the_goal` to enter it.
 
@@ -392,23 +390,23 @@
 
 37. Create a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: create README.md"`
 
-#### Create a diagram showing the client request to the Django-based web application and its response, and explain the relationship between `urls.py`, `views.py`, `models.py`, and the HTML file in the diagram.
+### Create a diagram showing the client request to the Django-based web application and its response, and explain the relationship between `urls.py`, `views.py`, `models.py`, and the HTML file in the diagram.
 
 ![Client Request-Response Diagram](assets/ClientRequestResponseDiagram.png)
 
-#### Explain the role of `settings.py` in a Django project!
+### Explain the role of `settings.py` in a Django project!
 
 `setting.py` is like the project's control center. It defines how the project behaves, holding all the key configurations necessary to manage the app’s behavior across development, testing, and production environments.
 
-#### How does database migration work in Django?
+### How does database migration work in Django?
 
 Database migration refers to the process of transferring data from a source database to a target database. When this process is complete, the dataset from the source database will be entirely transferred to the target database.
 
-#### In your opinion, among all existing frameworks, why is the Django framework chosen as the starting point for learning software development?
+### In your opinion, among all existing frameworks, why is the Django framework chosen as the starting point for learning software development?
 
 Since the main language used in Django is Python, which we are all already familiar with, we can focus on building and developing the application rather than doing it on top of learning a completely new language. Additionally, the Django framework offers both a frontend and a backend within a single application.
 
-#### Do you have any feedback for the teaching assistant for Tutorial 1 that you previously completed?
+### Do you have any feedback for the teaching assistant for Tutorial 1 that you previously completed?
 
 I currently have no feedback for the TAs since they already helped us a lot during the Tutorial. For future tutorials, I hope they continue to do what they're doing now and help us when we encounter problems.
 
@@ -418,23 +416,23 @@ I currently have no feedback for the TAs since they already helped us a lot duri
 
 > Forms and Data Delivery Implementation in Django
 
-#### Why do we need data delivery in implementing a platform?
+### Why do we need data delivery in implementing a platform?
 
 To enhance personalization and user engagement on a platform, human interaction is essential. Such interaction frequently involves the transmission and reception of data. Data delivery ensures that the data stays consistent and synchronized across devices.
 
-#### In your opinion, which is better, XML or JSON? Why is JSON more popular than XML?
+### In your opinion, which is better, XML or JSON? Why is JSON more popular than XML?
 
 In my opinion, JSON is preferable. XML is suitable for complex applications due to its robust validation features and use of attributes. However, JSON is favored for its lightweight nature and speed. Its native compatibility with JavaScript and ease of use also contribute to its greater popularity in recent applications over XML.
 
-#### What is the purpose of the is_valid() method in Django forms, and why do we need it?
+### What is the purpose of the is_valid() method in Django forms, and why do we need it?
 
 The is_valid() method ensures the data submitted by the user meets the validation rules and logic constraints. It returns a Boolean value, thus preventing invalid, incomplete, or unsafe data from being saved or processed.
 
-#### Why do we need a csrf_token when making forms in Django? What can happen if we don't include a csrf_token in a Django form? How can this be exploited by an attacker?
+### Why do we need a csrf_token when making forms in Django? What can happen if we don't include a csrf_token in a Django form? How can this be exploited by an attacker?
 
 Cross-Site Request Forgery (CSRF) is a type of cyberattack in which an attacker manipulates a user into performing unintended actions on a web application where they are already authenticated. The csrf_token protects against such threats by preventing malicious websites from submitting forms on behalf of authenticated users without their consent. Without this token, an application is exposed to CSRF attacks. For example, CSRF may be exploited to transfer funds without the user's knowledge, as the valid session allows the transaction to proceed as if authorized by the user.
 
-#### Explain how you implemented the checklist above step-by-step (not just following the tutorial).
+### Explain how you implemented the checklist above step-by-step (not just following the tutorial).
 
 1. Create a new directory in the root directory named `templates` and add a `base.html` file containing this code
 
@@ -675,11 +673,11 @@ Cross-Site Request Forgery (CSRF) is a type of cyberattack in which an attacker 
 
 10. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 3"`
 
-#### Do you have any feedback for the teaching assistants for Tutorial 2?
+### Do you have any feedback for the teaching assistants for Tutorial 2?
 
 Currently, no feedback for the TAs. They helped us a lot during the tutorial, and even corrected their mistakes on the website immediately after someone noticed them. 
 
-#### Access the four URLs in point 2 using Postman, take screenshots of the URL access results in Postman.
+### Access the four URLs in point 2 using Postman, take screenshots of the URL access results in Postman.
 
 **show_xml**
 ![http://127.0.0.1:8000/xml access result](assets/show_xml.png)
@@ -693,3 +691,252 @@ Currently, no feedback for the TAs. They helped us a lot during the tutorial, an
 **show_json_by_id**
 ![http://127.0.0.1:8000/json/05ad3136-c80f-4a0b-aafa-551ded7ad456 access result](assets/show_json_by_id.png)
 
+---
+
+## Assignment 4
+
+### What is Django's AuthenticationForm? Explain its advantages and disadvantages.
+
+AuthenticationForm is a built-in form in Django that handles user login using username and password. It validates the credentials and returns the logged-in user if the credentials are correct. It's easy to use and integrates well with Django's authentication system, while still maintaining security purposes. The disadvantages are that it only supports basic username/password login by default, so customizing email login or two-factor authentication requires extra work.
+
+### What is the difference between authentication and authorization? How does Django implement the two concepts?
+
+Authentication is used to verify the identity of the user. In Django, this is managed by User from django.contrib.auth.model, authentication backends, and login()/logout() functions.
+Authorization determines what an authenticated user can access or do. A way to apply this is by using decorators such as @login_required.
+
+### What are the benefits and drawbacks of using sessions and cookies in storing the state of a web application?
+
+Cookies only store a small piece of data on the client's side of the browser. This makes it simple and persistent, but it is limited in size and can be easily tampered with without proper security. While sessions only store the session ID in the client’s cookie, the actual data is kept securely on the server. It is more secure and flexible, but requires server storage and more setup. 
+
+### In web development, is the usage of cookies secure by default, or is there any potential risk that we should be aware of? How does Django handle this problem?
+
+Cookies are not fully secure by default because they can be stolen through attacks like XSS or intercepted if sent over HTTP. Django mitigates this risk by providing settings such as HttpOnly, Secure, and SameSite for session and CSRF cookies, ensuring they are only sent over HTTPS, inaccessible to JavaScript, and protected from cross-site requests. Django also uses CSRF tokens and rotates session keys after login to prevent common attacks.
+
+### Explain how you implemented the checklist above step-by-step (not just following the tutorial).
+1. Create 2 new HTML templates named `register.html` and `login.html` in the `main/templates` folder and fill them with the following code:
+
+    **register.html**
+    ```
+    {% extends 'base.html' %}
+    {% block meta %}
+    <title>Register</title>
+    {% endblock meta %}
+
+    {% block content %}
+    <div>
+        <h1>Register</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+                <tr>
+                    <td></td>
+                    <td><input type="submit" name="submit" value="Register" /></td>
+                </tr>
+            </table>
+        </form>
+
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endblock content %}
+    ```
+
+    **login.html**
+    ```
+    {% extends 'base.html' %}
+    {% block meta %}
+    <title>Login</title>
+    {% endblock meta %}
+
+    {% block content %}
+    <div class="login">
+        <h1>Login</h1>
+
+        <form method="POST" action="">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+                <tr>
+                    <td></td>
+                    <td><input class="btn login_btn" type="submit" value="Login" /></td>
+                </tr>
+            </table>
+        </form>
+
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %} Don't have an account yet?
+        <a href="{% url 'main:register' %}">Register Now</a>
+    </div>
+    {% endblock content %}
+    ```
+
+2. Modify the `main.html` file in the same directory. Add the following code after the name and class information, but before the product list.
+
+    ```
+    ...
+
+    <a href="{% url 'main:logout' %}">
+        <button>Logout</button>
+    </a>
+
+    <h5>Last login session: {{ last_login }}</h5>
+
+    <a href="{% url 'main:create_product' %}">
+        <button>+ Add Product</button>
+    </a>
+
+    <a href="?filter=all">
+        <button type="button">All Product</button>
+    </a>
+
+    <a href="?filter=my">
+        <button type="button">My Product</button>
+    </a>
+
+    ...
+    ```
+
+3. Modify the `product_detail.html` by adding the snippet below at the very end, just before `{% endblock content %}`.
+    
+    ```
+    {% if news.user %}
+    <p>Author: {{ news.user.username }}</p>
+    {% else %}
+    <p>Author: Anonymous</p>
+    {% endif %}
+    ```
+
+4. Modify the `views.py` file in the `main` directory by adding these import statements.
+
+    ```
+    from django.http import HttpResponse, HttpResponseRedirect
+    from django.urls import reverse
+    from django.contrib import messages
+    from django.contrib.auth import authenticate, login, logout
+    from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+    from django.contrib.auth.decorators import login_required
+    import datetime
+    ```
+
+5. Add a new `register()`, `login_user()`, and `logout_user()` function in the same file.
+
+    ```
+    def register(request):
+        form = UserCreationForm()
+
+        if request.method == "POST":
+            form = UserCreationForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Your account has been successfully created!')
+                return redirect('main:login')
+        
+        context = {'form':form}
+        return render(request, 'register.html', context)
+
+    def login_user(request):
+        if request.method == 'POST':
+            form = AuthenticationForm(data=request.POST)
+            if form.is_valid():
+                user = form.get_user()
+                login(request, user)
+                response = HttpResponseRedirect(reverse("main:show_main"))
+                response.set_cookie('last_login', str(datetime.datetime.now()))
+                return response
+        else:
+            form = AuthenticationForm(request)
+    
+        context = {'form': form}
+        return render(request, 'login.html', context)
+
+    def logout_user(request):
+        logout(request)
+        response = HttpResponseRedirect(reverse('main:login'))
+        response.delete_cookie('last_login')
+        return response
+    ```
+
+6. Add this line on top of the function where we want it to be authorized by authenticated users only. For this project, apply it to `show_main()`, `create_product()`, and `show_product()`.
+
+    ```
+    @login_required(login_url='/login')
+    ```
+
+7. Modify the `show_main()` function to this code.
+    
+    ```
+    def show_main(request):
+        filter_type = request.GET.get("filter", "all")  # default 'all'
+
+        if filter_type == "all":
+            product_list = Product.objects.all()
+        else:
+            product_list = Product.objects.filter(user=request.user)
+
+        context = {
+            'app' : 'The GOAL',
+            'name': 'Arisa Raezzura Zahra',
+            'class': 'PBD KKI',
+            'product_list' : product_list,
+            'last_login': request.COOKIES.get('last_login', 'Never')
+        }
+    ```
+
+8. Modify the import `urls.py` of the same `main` directory with this code.
+    
+    ```
+    from django.urls import path
+    from main.views import register, login_user, logout_user, show_main, create_product, show_product, show_xml, show_json, show_xml_by_id, show_json_by_id
+
+    app_name = 'main'
+
+    urlpatterns = [
+        path('', show_main, name='show_main'),
+        path('register/', register, name='register'),
+        path('login/', login_user, name='login'),
+        path('logout/', logout_user, name='logout'),
+        path('create-product/', create_product, name='create_product'),
+        path('product/<str:id>/', show_product, name='show_product'),
+        path('xml/', show_xml, name='show_xml'),
+        path('json/', show_json, name='show_json'),
+        path('xml/<str:id>/', show_xml_by_id, name='show_xml_by_id'),
+        path('json/<str:id>/', show_json_by_id, name='show_json_by_id'),
+    ]
+    ```
+
+9. Modify the `models.py` by adding a new import and a new `user` field.
+    
+    ```
+    ...
+    from django.contrib.auth.models import User
+
+    class Product(models.Model):
+        ...
+
+        user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+        ...
+    ```
+
+10. Save the changes and run these lines in the root directory command prompt
+
+    ```
+    git add .
+    git commit -m "feat: applied authentication, authorization, and session"
+    git push origin master
+    git push pws master
+    ```
+
+11. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 4"`
