@@ -813,8 +813,8 @@ Cookies are not fully secure by default because they can be stolen through attac
 3. Modify the `product_detail.html` by adding the snippet below at the very end, just before `{% endblock content %}`.
     
     ```
-    {% if news.user %}
-    <p>Author: {{ news.user.username }}</p>
+    {% if product.user %}
+    <p>Author: {{ product.user.username }}</p>
     {% else %}
     <p>Author: Anonymous</p>
     {% endif %}
