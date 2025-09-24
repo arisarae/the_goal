@@ -695,6 +695,8 @@ Currently, no feedback for the TAs. They helped us a lot during the tutorial, an
 
 ## Assignment 4
 
+> Implementing Authentication, Session, and Cookies in Django
+
 ### What is Django's AuthenticationForm? Explain its advantages and disadvantages.
 
 AuthenticationForm is a built-in form in Django that handles user login using username and password. It validates the credentials and returns the logged-in user if the credentials are correct. It's easy to use and integrates well with Django's authentication system, while still maintaining security purposes. The disadvantages are that it only supports basic username/password login by default, so customizing email login or two-factor authentication requires extra work.
@@ -939,4 +941,8 @@ Cookies are not fully secure by default because they can be stolen through attac
     git push pws master
     ```
 
-11. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 4"`
+11. Create 2 dummy account by registering it directly to the deployed website. 
+
+12. Log in to the accounts and create 3 product each using `Add Product`.
+
+13. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 4"`
