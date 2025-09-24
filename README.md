@@ -505,7 +505,9 @@ Cross-Site Request Forgery (CSRF) is a type of cyberattack in which an attacker 
         form = ProductForm(request.POST or None)
 
         if form.is_valid() and request.method == "POST":
-            form.save()
+            product_entry = form.save(commit = False)
+            product_entry.user = request.user
+            product_entry.save()
             return redirect('main:show_main')
 
         context = {'form': form}
@@ -814,9 +816,9 @@ Cookies are not fully secure by default because they can be stolen through attac
     
     ```
     {% if product.user %}
-    <p>Author: {{ product.user.username }}</p>
+    <p>Brand: {{ product.user.username }}</p>
     {% else %}
-    <p>Author: Anonymous</p>
+    <p>Brand: Anonymous</p>
     {% endif %}
     ```
 
@@ -932,7 +934,9 @@ Cookies are not fully secure by default because they can be stolen through attac
         ...
     ```
 
-10. Save the changes and run these lines in the root directory command prompt
+10. Create the model migration file with `python manage.py makemigrations`. Then run model migration with `python manage.py migrate`.
+
+11. Save the changes and run these lines in the root directory command prompt
 
     ```
     git add .
@@ -941,8 +945,8 @@ Cookies are not fully secure by default because they can be stolen through attac
     git push pws master
     ```
 
-11. Create 2 dummy account by registering it directly to the deployed website. 
+12. Create 2 dummy account by registering it directly to the deployed website. 
 
-12. Log in to the accounts and create 3 product each using `Add Product`.
+13. Log in to the accounts and create 3 product each using `Add Product`.
 
-13. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 4"`
+14. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 4"`
