@@ -57,6 +57,7 @@ def show_main(request):
     context = {
         'app' : 'The GOAL',
         'name': 'Arisa Raezzura Zahra',
+        'npm' : '2406453392',
         'class': 'PBD KKI',
         'product_list' : product_list,
         'last_login': request.COOKIES.get('last_login', 'Never')
@@ -76,6 +77,25 @@ def create_product(request):
 
     context = {'form': form}
     return render(request, "create_product.html", context)
+
+@login_required(login_url='/login')
+def edit_product(request, id):
+    product = get_object_or_404(Product, pk=id)
+    form = ProductForm(request.POST or None, instance=product)
+    if form.is_valid() and request.method == 'POST':
+        form.save()
+        return redirect('main:show_main')
+
+    context = {
+        'form': form
+    }
+
+    return render(request, "edit_product.html", context)
+
+def delete_product(request, id):
+    product = get_object_or_404(Product, pk=id)
+    product.delete()
+    return HttpResponseRedirect(reverse('main:show_main'))
 
 @login_required(login_url='/login')
 def show_product(request, id):
