@@ -392,7 +392,7 @@
 
 ### Create a diagram showing the client request to the Django-based web application and its response, and explain the relationship between `urls.py`, `views.py`, `models.py`, and the HTML file in the diagram.
 
-![Client Request-Response Diagram](assets/ClientRequestResponseDiagram.png)
+![Client Request-Response Diagram](static/image/ClientRequestResponseDiagram.png)
 
 ### Explain the role of `settings.py` in a Django project!
 
@@ -682,16 +682,16 @@ Currently, no feedback for the TAs. They helped us a lot during the tutorial, an
 ### Access the four URLs in point 2 using Postman, take screenshots of the URL access results in Postman.
 
 **show_xml**
-![http://127.0.0.1:8000/xml access result](assets/show_xml.png)
+![http://127.0.0.1:8000/xml access result](static/image/show_xml.png)
 
 **show_xml_by_id**
-![http://127.0.0.1:8000/xml/05ad3136-c80f-4a0b-aafa-551ded7ad456 access result](assets/show_xml_by_id.png)
+![http://127.0.0.1:8000/xml/05ad3136-c80f-4a0b-aafa-551ded7ad456 access result](static/image/show_json_by_id.png)
 
 **show_json**
-![http://127.0.0.1:8000/json access result](assets/show_json.png)
+![http://127.0.0.1:8000/json access result](static/image/show_json.png)
 
 **show_json_by_id**
-![http://127.0.0.1:8000/json/05ad3136-c80f-4a0b-aafa-551ded7ad456 access result](assets/show_json_by_id.png)
+![http://127.0.0.1:8000/json/05ad3136-c80f-4a0b-aafa-551ded7ad456 access result](static/image/show_json_by_id.png)
 
 ---
 
@@ -950,3 +950,295 @@ Cookies are not fully secure by default because they can be stolen through attac
 13. Log in to the accounts and create 3 product each using `Add Product`.
 
 14. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 4"`
+
+---
+
+## Assignment 4
+
+> Web Design using HTML, CSS and CSS Framework
+
+### If multiple CSS selectors target an HTML element, explain the priority order for CSS selector selection.
+
+When multiple CSS rules apply to the same element, browsers use a priority system called specificity. Inline styles (`style=""`) have the highest priority, followed by external style sheets and then internal style sheets. In the CSS itself, IDs (`#id`) have the highest priority, then classes/attributes/pseudo-classes (`.class`, `[attr]`, `:hover`), and lastly element selectors (`div`, `p`, etc.). If two rules have the same specificity, the one written last in the CSS file will be applied. If no rules are applied, it will follow the browser default.
+
+### Why is responsive design important in web application development?
+
+Responsive design enables web pages to adjust smoothly to various screen sizes, including phones, tablets, and desktops. It is important because users nowadays access apps on many devices, and a poor layout can make an app hard to use.
+
+### Provide examples of applications that have and haven't implemented responsive design. Explain the reasons behind your examples.
+
+Instagram and YouTube are highly responsive, offering a seamless experience on both mobile and desktop. On the other hand, some older government websites or university portals (for example, SIAK NG) often lack responsiveness, forcing users to zoom in or scroll sideways. The difference lies in modern apps prioritizing mobile usability, whereas older ones may have been built only for a specific screen.
+
+### Explain the differences between margin, border, and padding, and how to implement them
+
+The CSS box model defines how elements are spaced on a page. Margin is the space outside the element, creating distance between it and other elements. Border wraps around the element’s content and padding, acting like a frame. Padding is the space inside the element, between the content and the border.
+
+### Explain the concepts of flexbox and grid layout along with their uses
+
+Flexbox is a one-dimensional layout system useful for arranging items in a row or column, such as navigation bars or aligning buttons. It provides flexibility in spacing and alignment. CSS Grid is a two-dimensional layout system that enables the precise placement of items in rows and columns, making it ideal for page structures such as dashboards or galleries. Flexbox is best suited for linear alignment, while Grid is more suitable for full-page or complex layouts.
+
+### Explain how you implemented the above checklist step-by-step (not just following the tutorial)
+1. Open `base.html` and add the following tag to the head to make the website adjustable to mobile size and behaviour, and to use Tailwind CSS.
+
+    ```
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {% block meta %} {% endblock meta %}
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="{% static 'css/global.css' %}" />
+    </head>
+    ```
+
+2. Create a new HTML file named `edit_product.html` in the `main/templates`. Fill it with the following code,
+
+    ```
+    {% extends 'base.html' %}
+    {% load static %}
+    {% block content %}
+    <h1>Edit Product</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Edit Product"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+    {% endblock %}
+    ```
+
+3. Create 2 new function in `main/views.py` named `edit_product()` and `delete_product()` as follow,
+    
+    ```
+    @login_required(login_url='/login')
+    def edit_product(request, id):
+        product = get_object_or_404(Product, pk=id)
+        form = ProductForm(request.POST or None, instance=product)
+        if form.is_valid() and request.method == 'POST':
+            form.save()
+            return redirect('main:show_main')
+
+        context = {
+            'form': form
+        }
+
+        return render(request, "edit_product.html", context)
+
+    def delete_product(request, id):
+        product = get_object_or_404(Product, pk=id)
+        product.delete()
+        return HttpResponseRedirect(reverse('main:show_main'))
+    ```
+
+4. Open `urls.py` and add the new function to the import and urlpatterns.
+    
+    ```
+    ...
+    
+    from main.views import edit_product, delete_product,
+    ...
+        
+    urlpatterns = [
+        ...
+
+        path('product/<uuid:id>/edit', edit_product, name='edit_product'),
+        path('product/<uuid:id>/delete', delete_product, name='delete_product'),
+        ...
+    ]
+    ```
+
+5. Open `main.html` and add the edit and delete buttons.
+    
+    ```
+    ...
+
+    <p>
+        <a href="{% url 'main:show_product' product.id %}"><button>Read More</button></a>
+        {% if user.is_authenticated and product.user == user %}
+        <a href="{% url 'main:edit_product' product.pk %}">
+            <button>
+                Edit
+            </button>
+        </a>
+        <a href="{% url 'main:delete_product' product.pk %}">
+            <button>
+                Delete
+            </button>
+        </a>
+        {% endif %}
+    </p>
+    ...
+    ```
+
+6. In the root `template` directory, make a new `navbar.html` and fill it with this code,
+
+    ```
+    <nav>
+        <h1>The GOAL</h1>
+
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="{% url 'main:create_product' %}">Create Product</a></li>
+        </ul>
+
+        {% if user.is_authenticated %}
+            <div>
+            <span>Welcome, {{ name|default:user.username }}</span>
+            <span>{{ npm|default:"Student" }} - {{ class|default:"Class" }}</span>
+            <a href="{% url 'main:logout' %}">Logout</a>
+            </div>
+        {% else %}
+            <div>
+            <a href="{% url 'main:login' %}">Login</a>
+            <a href="{% url 'main:register' %}">Register</a>
+            </div>
+        {% endif %}
+    </nav>
+    ```
+
+7. Link the navbar to the `main.html` in the `main/template` directory.
+    
+    ```
+    {% extends 'base.html' %}
+    {% block content %}
+    {% include 'navbar.html' %}
+    
+    ...
+    
+    {% endblock content%}
+    ```
+
+8. Open `settings.py` inside the `the_goal` project directory and add a new WhiteNoiseMiddleware right below the SecurityMiddleware.
+
+    ```
+    ...
+    
+    MIDDLEWARE = [
+        'django.middleware.security.SecurityMiddleware',
+        'whitenoise.middleware.WhiteNoiseMiddleware',
+        
+        ...
+    ]
+    
+    ...
+    ```
+
+9. In the same file, add the following code under `STATIC_URL`.
+
+    ```
+    if DEBUG:
+        STATICFILES_DIRS = [
+            BASE_DIR / 'static' # refers to /static root project in development mode
+        ]
+    else:
+        STATIC_ROOT = BASE_DIR / 'static' # refers to /static root project in production mode
+    ```
+
+10. Create a new folder called `static` in the root and make a `css` folder in it. Fill the folder with `global.css`. Modify the file to add a custom design to the project.
+
+11. Create a new HTML for the product card inside `main/template` and fill it with this code.
+    
+    ```
+    {% load static %}
+    <article
+        class="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-300 overflow-hidden h-fit">
+        <!-- Thumbnail -->
+        <div class="aspect-[16/9] relative overflow-hidden">
+            {% if product.thumbnail %}
+            <img src="{{ product.thumbnail }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+            {% else %}
+            <div class="w-full h-full bg-gray-200"></div>
+            {% endif %}
+
+            <!-- Status Badges -->
+            <div class="absolute top-3 right-3 flex space-x-2">
+                {% if product.is_featured %}
+                <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                    Featured
+                </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="p-5">
+            <h3 class="text-xl font-semibold text-gray-900 mb-1 line-clamp-2 leading-tight">
+                <a href="{% url 'main:show_product' product.id %}" class="hover:text-green-600 transition-colors font-bold">
+                    {{ product.name }}
+                </a>
+            </h3>
+
+            <p class="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-2">
+                {{ product.get_category_display }}
+            </p>
+
+            <p class="text-gray-900 text-lg leading-relaxed line-clamp-3 mb-4">
+                Only at <span class="text-red-700 font-bold">Rp {{ product.price }}</span>
+            </p>
+
+
+            <!-- Action Buttons -->
+            {% if user.is_authenticated and product.user == user %}
+            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                <a href="{% url 'main:show_product' product.id %}"
+                    class="text-green-600 hover:text-green-700 font-medium text-sm transition-colors">
+                    See Detail →
+                </a>
+                <div class="flex space-x-2">
+                    <a href="{% url 'main:edit_product' product.id %}"
+                        class="text-gray-600 hover:text-gray-700 text-sm transition-colors">
+                        Edit
+                    </a>
+                    <a href="{% url 'main:delete_product' product.id %}"
+                        class="text-red-600 hover:text-red-700 text-sm transition-colors">
+                        Delete
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="pt-4 border-t border-gray-100">
+                <a href="{% url 'main:show_product' product.id %}"
+                    class="text-green-600 hover:text-green-700 font-medium text-sm transition-colors">
+                    See Detail →
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </article>
+    ```
+
+12. To use a display image when the product is still empty, make a new folder named `image` inside the `static` directory. Add the `no-product.jpg` image inside it. The use of the image and product card is demonstrated in this code. Put it after the filter section.
+
+    ```
+    {% if not product_list %}
+        <div>
+            <img src="{% static 'image/no-product.jpg' %}" alt="No product available">
+            <h3>No product found</h3>
+            <p>Create your own product and be The GOAL!</p>
+            <a>Create Product</a>
+        </div>
+    {% else %}
+        {% for product in product_list %}
+            {% include 'card_product.html' with product=product %}
+        {% endfor %}
+    {% endif %}
+    ```
+
+13. Modify the other HTML file with Tailwind by adding `class` inside each tag and fill it with the desired design. Tailwind documentation can be seen [here](https://tailwindcss.com/docs/installation/using-vite)
+
+14. Save the changes and run these lines in the root directory command prompt.
+
+    ```
+    git add .
+    git commit -m "feat: implement update and delete methods on data, design web using tailwind css"
+    git push origin master
+    git push pws master
+    ```
+
+15. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 5"`
