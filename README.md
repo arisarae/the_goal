@@ -388,7 +388,7 @@
     git push pws master
     ```
 
-37. Create a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: create README.md"`
+37. Create the `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: create README.md"`
 
 ### Create a diagram showing the client request to the Django-based web application and its response, and explain the relationship between `urls.py`, `views.py`, `models.py`, and the HTML file in the diagram.
 
@@ -673,7 +673,7 @@ Cross-Site Request Forgery (CSRF) is a type of cyberattack in which an attacker 
     git push pws master
     ```
 
-10. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 3"`
+10. Modify the `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 3"`
 
 ### Do you have any feedback for the teaching assistants for Tutorial 2?
 
@@ -949,7 +949,7 @@ Cookies are not fully secure by default because they can be stolen through attac
 
 13. Log in to the accounts and create 3 product each using `Add Product`.
 
-14. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 4"`
+14. Modify the `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 4"`
 
 ---
 
@@ -1241,4 +1241,28 @@ Flexbox is a one-dimensional layout system useful for arranging items in a row o
     git push pws master
     ```
 
-15. Modify a `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 5"`
+15. Modify the `README.md` file in the root directory, fill it with the information needed, and do another git add, commit, push with the commit message `"docs: update README.md - Assignment 5"`
+
+## Assignment 5
+### What is the difference between synchronous request and asynchronous request?
+
+A synchronous request waits for the server to respond before continuing, so the page freezes or reloads first during the process. Meanwhile, asynchronous request allows the page to keep running while waiting for the server’s response, so users can still interact with other parts of the site without interruption.
+
+### How does AJAX work in Django (request–response flow)?
+
+AJAX (Asynchronous JavaScript and XML) sends data to the Django server in the background without reloading the page. When a user triggers an event such as submitting a form, JavaScript sends an AJAX request to a Django view (often through a URL mapped in urls.py). The view processes the data and returns a JSON response. JavaScript then updates part of the webpage dynamically using the response without needing full page reload.
+
+### What are the advantages of using AJAX compared to regular rendering in Django?
+
+- Since only parts of the page are updated, load time reduced significantly.
+- No full-page reloads making the interactions feel more seamless.
+- Less data is transferred compared to re-rendering entire pages.
+- Ideal for features like live search, chat, or real-time notifications.
+
+### How do you ensure security when using AJAX for Login and Register features in Django?
+
+To keep AJAX requests secure, Django uses CSRF tokens for protection against cross-site request forgery. All data should be validated on the server side to prevent bypassing security checks. Use HTTPS to protect sensitive data like passwords, and ensure proper authentication and permission checks in the Django views.
+
+### How does AJAX affect user experience (UX) on websites?
+
+AJAX improves UX by making web apps feel faster and more interactive. Users don’t have to wait for full page to reloads after each action, making the site feel more like a modern application. For example, typing in a search box can show instant results, or liking a post can update the count immediately without leaving or reloading the page.
