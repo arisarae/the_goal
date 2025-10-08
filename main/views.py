@@ -14,6 +14,27 @@ from django.utils.html import strip_tags
 import datetime
 
 # Create your views here.
+def register_ajax(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        
+        if form.is_valid():
+            form.save()
+            return JsonResponse({
+                "success": True,
+                "message": "Your account has been successfully created!",
+                "redirect_url": reverse("main:login")
+            })
+        else:
+            errors = {field: [str(e) for e in errs] for field, errs in form.errors.items()}
+            return JsonResponse({
+                "success": False,
+                "errors": errors
+            })
+    
+    form = UserCreationForm()
+    return render(request, "register.html", {"form": form})
+
 def register(request):
     form = UserCreationForm()
 
@@ -26,6 +47,28 @@ def register(request):
     
     context = {'form':form}
     return render(request, 'register.html', context)
+
+def login_ajax(request):
+    if request.method == "POST":
+        form = AuthenticationForm(data=request.POST)
+        
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            response = JsonResponse({
+                "success": True,
+                "message": "Your have login successfully!"
+            })
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+        else:
+            return JsonResponse({
+                "success": False,
+                "errors": form.errors
+            })
+    
+    form = AuthenticationForm()
+    return render(request, "login.html", {"form": form})
 
 def login_user(request):
     if request.method == 'POST':
@@ -106,6 +149,24 @@ def create_product(request):
 
     context = {'form': form}
     return render(request, "create_product.html", context)
+
+@csrf_exempt
+@require_POST
+def edit_product_ajax(request):
+    id = request.POST.get("id")
+    product = get_object_or_404(Product, pk=id)
+
+    product.name = strip_tags(request.POST.get("name"))
+    product.price = strip_tags(request.POST.get("price"))
+    product.description = strip_tags(request.POST.get("description"))
+    product.thumbnail = strip_tags(request.POST.get("thumbnail"))
+    product.category = request.POST.get("category")
+    product.stock = strip_tags(request.POST.get("stock"))
+    product.is_featured = request.POST.get("is_featured") == 'on'  # checkbox handling
+
+    product.save()
+
+    return HttpResponse(b"UPDATED", status=201)
 
 @login_required(login_url='/login')
 def edit_product(request, id):
